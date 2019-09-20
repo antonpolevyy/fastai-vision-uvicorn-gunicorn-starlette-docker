@@ -9,14 +9,14 @@ Known Problems:
 
 ## Installation
 
-Recommended usage is to use the pre-built (from this repo) images from dockerhub, and overwrite the export.pkl at runtime, and provide environment variables.
+Recommended usage is to build the docker image with name <your_docker_name> yourself, and overwrite the export.pkl at runtime, and provide environment variables and substitute <your_docker_name> with the docker image name you created.
 
 ```shell
 	docker run -p 80:80 \
 		-v ./local/path/to/export.pkl:/app/export.pkl \
 		-e TITLE="Chinese Calligraphy Classifier" \
 		-e SUBTITLE="Can disambiguate Chinese calligraphy styles like KaiShu, LiShu, XiaoZhuan" 
-		your_docker_name
+		<your_docker_name>
 ```
 
 ## Usage
