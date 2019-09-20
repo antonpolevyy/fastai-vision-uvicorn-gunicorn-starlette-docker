@@ -1,1 +1,1 @@
-docker build -t vision2http .
+docker build -t test1 .
