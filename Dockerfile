@@ -1,11 +1,11 @@
-FROM tiangolo/uvicorn-gunicorn-starlette:python3.6
+FROM tiangolo/uvicorn-gunicorn-starlette:python3.7
 
 
-RUN pip install fastai==1.0.44 aiohttp
+RUN pip install fastai aiohttp
 
 RUN pip install jinja2
 
-RUN pip install starlette==0.11.1
+RUN pip install starlette
 
 COPY ./app /app
 
