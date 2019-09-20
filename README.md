@@ -1,5 +1,7 @@
 # Docker image for doing inference on vision models trained with fastai
 
+This repo is an adaptation of https://github.com/gdoteof/fastai-vision-uvicorn-gunicorn-starlette-docker. I tried his default code and the Dockerfile is a bit old on fast.ai version so I updated it. Also added Semantic UI for better UI on the webapp part. 
+
 This docker image is a wrapper around https://github.com/tiangolo/uvicorn-gunicorn-starlette-docker, adding the dependencies to run fastai models, as well as a minimal "webapp" to make requests.
 
 Known Problems:
@@ -12,9 +14,9 @@ Recommended usage is to use the pre-built (from this repo) images from dockerhub
 ```shell
 	docker run -p 80:80 \
 		-v ./local/path/to/export.pkl:/app/export.pkl \
-		-e TITLE="Mouse De-ambiguifier" \
-		-e SUBTITLE="Can disambiguate computer mouse, animal mouse, and mickey mouse" \
-		gdoteof/fastai-vision-uvicorn-gunicorn-starlette-docker
+		-e TITLE="Chinese Calligraphy Classifier" \
+		-e SUBTITLE="Can disambiguate Chinese calligraphy styles like KaiShu, LiShu, XiaoZhuan" 
+		your_docker_name
 ```
 
 ## Usage
