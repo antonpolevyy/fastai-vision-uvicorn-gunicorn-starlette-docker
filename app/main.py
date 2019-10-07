@@ -21,6 +21,12 @@ logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 templates = Jinja2Templates(directory='templates')
 
+# ----------------------------  LOAD LEARNER
+file_path = 'export.pkl'
+learner = load_learner('',file_path)
+# learner = load_learner(path, file_path)
+print('learer.data.classes = ', learner.data.classes)
+# ----------------------------  end LOAD LEARNER
 
 
 @app.middleware("http")
@@ -46,6 +52,24 @@ async def get_bytes(url):
         async with session.get(url) as response:
             return await response.read()
 
+def predict_image_from_bytes(bytes):
+    img = open_image(BytesIO(bytes))
+    print('open_imgage = ', img)
+    # out_class, out_index_tensor, probabilities = learner.predict(img)
+    # max_index = int(out_index_tensor) 
+
+    # make a dictionary of classes with probabilities
+    classes = learner.data.classes
+    _, _, probabilities = learner.predict(img)
+    out_classification = dict(zip( classes, map(float, probabilities) ))
+    # sort by value to have best prediction first in order
+    out_classification = sorted(out_classification.items(), key=lambda kv: kv[1], reverse=True)
+    print('classification completed: ', out_classification)
+    return JSONResponse({
+        "predictions": out_classification
+    })
+
+
 @app.route('/')
 async def homepage(request):
     env = os.environ
@@ -66,30 +90,13 @@ async def classify_url(request):
 
 @app.route("/classify-url", methods=["GET"])
 async def classify_url(request):
+    print('\n\n------ /classify-url [GET]')
     bytes = await get_bytes(request.query_params["url"])
-    img = open_image(BytesIO(bytes))
-    learner = load_learner(Path("/app"))
-    _,_,losses = learner.predict(img)
-    return JSONResponse({
-        "predictions": sorted(
-            zip(learner.data.classes, map(float, losses)),
-            key=lambda p: p[1],
-            reverse=True
-        )})
+    return predict_image_from_bytes(bytes)
 
 @app.route("/classify-url", methods=["POST"])
 async def classify_url(request):
+    print('\n\n------ /classify-url [POST]')
     bytes = await request.body()
-    img = open_image(BytesIO(bytes))
-    learner = load_learner(Path("/app"))
-    _,_,losses = learner.predict(img)
-
-
-    return JSONResponse({
-        "predictions": sorted(
-            zip(learner.data.classes, map(float, losses)),
-            key=lambda p: p[1],
-            reverse=True
-
-        )})
+    return predict_image_from_bytes(bytes)
 
